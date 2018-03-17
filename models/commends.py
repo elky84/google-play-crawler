@@ -12,7 +12,7 @@ class Commends(Base):
     authorName = Column(String(250))
     # Date = Column(String(250))
     authorRating = Column(Float(10))
-    reviewContent = Column(String(250))
+    reviewContent = Column(String(8192))
     link = Column(String(250))
 
     def __init__(self, data):

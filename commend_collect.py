@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import requests as rq
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin, parse_qs
@@ -14,6 +16,12 @@ import re
 import time
 
 import sqlalchemy
+
+import sys  
+import chardet
+
+if hasattr(sys, 'setdefaultencoding'):
+    sys.setdefaultencoding('utf8')                   
 
 def make_payload(page):
     return "start=%s&num=60&numChildren=0&cctcss=tall-cover&cllayout=NORMAL"%(page)
@@ -101,11 +109,22 @@ def get_text(soup):
 
     return soup[0].text
 
+def error_file_save(file_name, data):
+    a = open(file_name, 'a', encoding='utf-8')
+    try:
+        #print(chardet.detect(data['reviewContent'].encode()))
+        a.write("{}\n".format(data))
+    except (UnicodeEncodeError) as err:
+        print('encode_error. err[{}] data[{}]'.format(err, data))
+
 
 def file_save(file_name, data):
-    print(data)
-    a = open(file_name, 'a')
-    a.write(str(data['authorRating']) + ':::' + str(data['reviewContent']) + '\n')
+    a = open(file_name, 'a', encoding='utf-8')
+    try:
+        #print(chardet.detect(data['reviewContent'].encode()))
+        a.write("[{}, {}] {}\n".format(data['title'], str(data['authorRating']),data['reviewContent']))
+    except (UnicodeEncodeError) as err:
+        print('encode_error. err[{}] data[{}]'.format(err, data))
 
 
 def db_save(data):
@@ -114,18 +133,23 @@ def db_save(data):
         db_session.add(commend)
         db_session.commit()
     except sqlalchemy.exc.DataError as err:
+        print('db_save error. err[{}] data[{}]'.format(err, data))
         db_session.rollback()
 
 
 def data_parse(link):
     try:
-        res = rq.get(link)
+        headers = {'Content-Type': 'charset=utf-8'}
+        res = rq.get(link, headers=headers)
         soup = BeautifulSoup(res.content, 'lxml')
 
         app_title = get_text(soup.select('.id-app-title'))
         app_rating = get_rating(soup.select('.current-rating')) or 0.0
-        app_rating_count = get_text(soup.select('.rating-count')) or 0
+        app_rating_count = get_text(soup.select('.reviews-stats .reviews-num')) or 0
         review_columns = soup.select('.multicol div .single-review')
+        
+        if isinstance(app_rating_count, str):
+             app_rating_count = app_rating_count.replace(",", "")
 
         for reviews_column_soup in review_columns:
             review_author_name = get_text(reviews_column_soup.select('.author-name'))
@@ -146,9 +170,10 @@ def data_parse(link):
             }
 
             file_save('commends.txt', data)
-            # db_save(data)
+            
+            db_save(data)
     except:
-        file_save('error.txt', link)
+        error_file_save('error.txt', link)
 
 
 if __name__ ==  "__main__":

@@ -1,3 +1,11 @@
 .idea/
 __pycache__/
 .DS_Store
+
+DB_Config.py
+
+.vscode/
+/*.project
+/*.pydevproject
+/.settings/*.prefs
+/config/DB_config.py
