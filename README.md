@@ -1,3 +1,16 @@
+[![Website](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=elky-essay)](https://elky84.github.io)
+<img src="https://img.shields.io/badge/made%20with-Python-blue.svg" alt="made with Python">
+
+![GitHub forks](https://img.shields.io/github/forks/elky84/google-play-crawler.svg?style=social&label=Fork)
+![GitHub stars](https://img.shields.io/github/stars/elky84/google-play-crawler.svg?style=social&label=Stars)
+![GitHub watchers](https://img.shields.io/github/watchers/elky84/google-play-crawler.svg?style=social&label=Watch)
+![GitHub followers](https://img.shields.io/github/followers/elky84.svg?style=social&label=Follow)
+
+![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)
+![GitHub repo size in bytes](https://img.shields.io/github/repo-size/elky84/google-play-crawler.svg)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/elky84/google-play-crawler.svg)
+
+
 # **구글 플레이 크롤러**
 
 해당 프로젝트는 2개의 실행 파일로 구성되어 있습니다.
